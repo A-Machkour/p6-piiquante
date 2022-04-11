@@ -13,5 +13,7 @@ Installation :
     install nodemon
 
     install all dependencies
+    
+    nodemon server.js
 
   le fichier .env n'est pas commit
