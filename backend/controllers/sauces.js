@@ -3,25 +3,23 @@ const fs = require('fs');
 
 
 
-
+//Affichage des sauces
 exports.getAllSauces = (req,res) =>{
     Product.find({}).then(products => res.send(products)).catch(error => res.status(500).send(error));
 }
+// Affichage d'une sauce
 exports.getSauceById=(req,res)=>{
-    console.log(req.params);
     const id = req.params.id;
     Product.findById(id)
         .then(product => {
-            console.log("le produit avec cet id: ",product);
             res.send(product);
         })
         .catch(error => res.status(500).send(error));
 }
+// création d'une sauce
 exports.createSauce= (req,res) =>{
     
-    console.log({body : req.body});
     const sauce = JSON.parse(req.body.sauce);
-    console.log("sauce",sauce);
     const product = new Product({
         ...sauce,
         likes:0,
@@ -31,11 +29,11 @@ exports.createSauce= (req,res) =>{
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
 
     });
-    console.log('product',product);
     product.save()
       .then(() => res.status(201).json({ message: 'Objet enregistré !'}))
       .catch(error => res.status(400).json({ message:"err au save" + error }));
 }
+// Suppression d'une sauce
 exports.deleteSauce=(req,res)=>{
     Product.findOne({ _id: req.params.id })
     .then(thing => {
@@ -48,15 +46,15 @@ exports.deleteSauce=(req,res)=>{
     })
     .catch(error => res.status(500).json({ error }));
 }
-
+// Modification d'une sauce
 exports.modifySauce=(req,res)=>{
     const isNewImage = req.file != null;
-    console.log("new image?", isNewImage);
     let payload = modifyImage(req,isNewImage);
     Product.updateOne({ _id: req.params.id }, { ...payload, _id: req.params.id })
     .then(() => res.status(200).json({ message: 'Objet modifié !'}))
     .catch(error => res.status(400).json({ error }));
 }
+//  function pour modifier l'image
 function modifyImage(req,isNewImage){
     if (!isNewImage){
         return req.body;
@@ -65,6 +63,7 @@ function modifyImage(req,isNewImage){
     body.imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
     return body;
 }
+// Ajout d'un like/dislike
 exports.sauceLikes = (req, res, next) => {
     // LIKE
     switch (req.body.like) {

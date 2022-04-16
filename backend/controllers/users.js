@@ -2,7 +2,7 @@ const userDb = require("../models/userdb");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-
+// Sign up
 exports.userToDatabase=(req, res)=> {
 
     bcrypt.hash(req.body.password, 10)
@@ -18,7 +18,7 @@ exports.userToDatabase=(req, res)=> {
     .catch(err => res.status(500).json({ message: "error" + err  }));
 }
 
-
+// Login
 exports.userLogin=(req, res)=> {
 
 

@@ -1,5 +1,6 @@
 const passSchema = require('../models/password');
 
+// Verification du password
 module.exports = (req, res, next) => {
   if (passSchema.validate(req.body.password)) {
     next();
